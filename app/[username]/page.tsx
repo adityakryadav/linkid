@@ -18,10 +18,9 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
         }
 
         const canonicalUsername = resolved.canonicalUsername ?? username;
-        const user = resolved.user;
         
-        const defaultImage = "https://linkid.qzz.io/default-og.png"; 
-        const profileImage = user?.image || defaultImage;
+        const baseUrl = process.env.NEXTAUTH_URL || "https://linkid.qzz.io";
+        const ogImageUrl = `${baseUrl}/api/og/${canonicalUsername}`;
 
         return {
             title: `${canonicalUsername} | LinkID`,
@@ -31,9 +30,10 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
                 description: `Check out ${canonicalUsername}'s LinkID profile.`,
                 images: [
                     {
-                        url: profileImage,
-                        // width and height have been removed
-                        alt: `${canonicalUsername}'s profile picture`,
+                        url: ogImageUrl,
+                        width: 1200,
+                        height: 630,
+                        alt: `${canonicalUsername}'s LinkID Profile Card`,
                     },
                 ],
             },
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
                 card: "summary_large_image",
                 title: `${canonicalUsername} | LinkID`,
                 description: `Check out ${canonicalUsername}'s LinkID profile.`,
-                images: [profileImage],
+                images: [ogImageUrl],
             },
         };
     } catch {
